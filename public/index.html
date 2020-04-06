@@ -6,46 +6,19 @@
     <title>Contact List App</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css"
         integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <base href="/">
 </head>
 
 <body>
-    <div class="container" ng-controller="AppCtrl">
-        <h1> Contact List App </h1>
+    <p><a href="/">Main</a></p>
 
-        <table class="table">
-            <thead>
-                <tr>
-                    <th>Name</th>
-                    <th>Email</th>
-                    <th>Number</th>
-                    <th>Action</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr>
-                    <td>
-                        <input type="text" class="form-control" ng-model="contact.name">
-                    </td>
-                    <td>
-                        <input type="text" class="form-control" ng-model="contact.email">
-                    </td>
-                    <td>
-                        <input type="text" class="form-control" ng-model="contact.number">
-                    </td>
-                    <td>
-                        <button class="btn btn-primary" ng-click="addContact()">Add Contact</button>
-                    </td>
-                </tr>
-                <tr ng-repeat="contact in contactList">
-                    <td>{{contact.name}}</td>
-                    <td>{{contact.email}}</td>
-                    <td>{{contact.number}}</td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
+    <a href="/red">Red</a>
+
+    <div ng-view></div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
+    <script src="app.js"></script>
     <script src="controllers/controller.js"></script>
 </body>
 

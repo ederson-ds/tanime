@@ -1,11 +1,10 @@
-var myApp = angular.module('myApp', []);
 myApp.controller('AppCtrl', function ($scope, $http) {
     console.log("Hello World from controller");
 
     $scope.loadContacts = function() {
         $http.get('/contactlist').then(function(response) {
-            console.log("I got the data I requested");
             $scope.contactList = response.data;
+            console.log($scope.contactList);
         });
         delete $scope.contact;
     }
