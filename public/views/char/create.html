@@ -1,0 +1,4 @@
+<input type="text" ng-model="char.name" placeholder="Name">
+<input type="text" ng-model="char.image" placeholder="Image">
+<select ng-model="char.rarity" ng-options="rarity.id as rarity.name for rarity in rarities"></select>
+<input type="submit" ng-click="save(char)" value="Save" />
