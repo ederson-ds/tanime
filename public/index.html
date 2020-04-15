@@ -136,7 +136,7 @@
     </style>
 </head>
 
-<body>
+<body ng-controller="appCtrl">
 
     <nav class="navbar fixed-top navbar-expand-lg navbar-light bg-light" style="font-size: 12pt !important">
         <img src="dist/logo.png" alt="logo" width="150" style="margin-right: 16px;">
@@ -164,14 +164,12 @@
                 </li>
             </ul>
             <ul class="navbar-nav">
-                <? php/* if ($username) {*/ ?>
-                <a class="nav-link" href="user" style="padding-right: 15px"><?php /*echo $username;*/ ?></a>
-                <?php /*} else {*/ ?>
+                <a class="nav-link" href="user" style="padding-right: 15px" ng-show="loggedIn">{{sessUsername}}</a>
                 <li class="nav-item">
-                    <a class="nav-link" href="login">Login</a>
+                    <a class="nav-link" href="login" ng-show="!loggedIn">Login</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="login/signup" style="padding-right: 15px;">Sign Up</a>
+                    <a class="nav-link" href="signup" style="padding-right: 15px;" ng-show="!loggedIn">Sign Up</a>
                 </li>
                 <?php /*}*/ ?>
             </ul>
@@ -191,10 +189,13 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.7.9/angular.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.6.9/angular-route.js"></script>
     <script src="app.js"></script>
+    <script src="controllers/appCtrl.js"></script>
     <script src="controllers/controller.js"></script>
     <script src="controllers/charCtrl.js"></script>
     <script src="controllers/seriesCtrl.js"></script>
     <script src="controllers/loginCtrl.js"></script>
+    <script src="controllers/signupCtrl.js"></script>
+    <script src="controllers/userCtrl.js"></script>
 </body>
 
 </html>

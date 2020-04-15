@@ -21,7 +21,7 @@ myApp.controller('seriesCtrl', function ($scope, $http, $location, $routeParams)
 
             fileReader.onload = function (fileLoadedEvent) {
                 var srcData = fileLoadedEvent.target.result; // <--- data: base64
-                
+
                 $scope.updateImgBase64(srcData);
             }
             fileReader.readAsDataURL(fileToLoad);
@@ -45,12 +45,10 @@ myApp.controller('seriesCtrl', function ($scope, $http, $location, $routeParams)
             });
         } else {
             //Create
-            console.log($scope.series);
-            /*
             $http.post('/series/create', $scope.series).then(function (response) {
                 console.log("salvou com sucesso");
                 $location.path("/");
-            });*/
+            });
         }
 
     }

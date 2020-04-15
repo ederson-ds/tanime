@@ -1,8 +1,15 @@
 const express = require('express');
+const session = require('express-session');
 const mongoose = require('mongoose');
 const app = express();
 const bodyParser = require('body-parser');
 const PORT = process.env.PORT || 5000;
+
+app.use(session({
+    secret: 'ssshhhhh',
+    resave: true,
+    saveUninitialized: true
+}));
 
 // make a connection
 mongoose.connect('mongodb+srv://dbUser:zge3TnJFfYe839Lh@cluster0-l3oqr.mongodb.net/tanime', { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false });
@@ -44,9 +51,37 @@ const SeriesSchema = mongoose.Schema({
     }
 });
 
+const PreSeriesSchema = mongoose.Schema({
+    name: {
+        type: String,
+        require: true
+    },
+    image: {
+        type: String,
+        require: true
+    },
+    username: {
+        type: String,
+        require: true
+    }
+});
+
+const UsersSchema = mongoose.Schema({
+    username: {
+        type: String,
+        require: true
+    },
+    password: {
+        type: String,
+        require: true
+    }
+});
+
 // compile schema to model
 var Char = mongoose.model('Char', CharSchema, 'char');
 var Series = mongoose.model('Series', SeriesSchema, 'series');
+var Preseries = mongoose.model('Preseries', PreSeriesSchema, 'preseries');
+var Users = mongoose.model('Users', UsersSchema, 'users');
 
 db.on('error', console.error.bind(console, 'connection error:'));
 
@@ -79,11 +114,29 @@ app.get('/series', function (req, res) {
     });
 });
 
+var sess;
 app.get('/api/series/create/:seriesname', function (req, res) {
+    sess = req.session;
+
+    if (!sess.email) {
+        //console.log("redirect");
+        //res.redirect('/');
+        //return;
+    }
     var seriesname = req.params.seriesname;
     Series.findOne({ name: seriesname }, function (err, collection) {
         res.json(collection);
     });
+});
+
+app.get('/sessionValidate', function (req, res) {
+    sess = req.session;
+
+    if (sess.username) {
+        res.json({username: sess.username});
+    } else {
+        res.json({});
+    }
 });
 
 app.get('/char', function (req, res) {
@@ -91,28 +144,53 @@ app.get('/char', function (req, res) {
         res.json(collection);
     });
 });
-/*
-function stringRefactory(string) {
-    return string.replace(/_/g, ' ');
-}
-*/
-//The 404 Route (ALWAYS Keep this as the last route)
-app.get('*', function (req, res) {
-    return res.redirect('/');
+
+app.post('/login/usernameexists', function (req, res) {
+    Users.findOne({ username: req.body.username }, function (err, collection) {
+        res.json(collection);
+    });
 });
 
-app.post('/char/create', function (req, res) {
+app.post('/login/exists', function (req, res) {
+    sess = req.session;
+    Users.findOne({ username: req.body.username, password: req.body.password }, function (err, collection) {
+        if (collection) {
+            sess.username = collection.username;
+            res.json(collection);
+        } else {
+            res.json({});
+        }
+    });
+});
 
-    console.log(req.body);
+app.post('/signup', function (req, res) {
+    // a document instance
+    var users = new Users({ username: req.body.username, password: req.body.password });
 
+    users.save(function (err, users) {
+        res.json(users);
+    });
 });
 
 app.post('/series/create', function (req, res) {
+    sess = req.session;
     // a document instance
-    var series = new Series({ name: req.body.name, image: req.body.image });
+    /*var series = new Series({ name: req.body.name, image: req.body.image });
 
     series.save(function (err, series) {
         res.json(series);
+    });*/
+    var preseries = new Preseries({ name: req.body.name, image: req.body.image, username: sess.username });
+
+    preseries.save(function (err, preseries) {
+        res.json(preseries);
+    });
+});
+
+app.get('/preseries', function (req, res) {
+    sess = req.session;
+    Preseries.find({ username: sess.username }, function (err, collection) {
+        res.json(collection);
     });
 });
 
@@ -133,6 +211,11 @@ app.put('/series/create/:seriesname', function (req, res) {
     /*series.save(function (err, series) {
         res.json(series);
     });*/
+});
+
+//The 404 Route (ALWAYS Keep this as the last route)
+app.get('*', function (req, res) {
+    return res.redirect('/');
 });
 
 /* remove all

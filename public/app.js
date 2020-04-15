@@ -23,8 +23,13 @@ myApp.config(function ($routeProvider, $locationProvider) {
             templateUrl: "views/login/login.html",
             controller: "loginCtrl"
         })
-        .when("/blue", {
-            templateUrl: "blue.htm"
+        .when("/signup", {
+            templateUrl: "views/signup/signup.html",
+            controller: "signupCtrl"
+        })
+        .when("/user", {
+            templateUrl: "views/user/home.html",
+            controller: "userCtrl"
         }).otherwise({
             template: "<h1>None</h1><p>Nothing has been selected</p>"
         });
@@ -49,4 +54,23 @@ myApp.filter('spaceless',function() {
             return input.replace(/_/g, ' ');    
         }
     }
+});
+
+myApp.directive("matchPassword", function () {
+    return {
+        require: "ngModel",
+        scope: {
+            otherModelValue: "=matchPassword"
+        },
+        link: function(scope, element, attributes, ngModel) {
+
+            ngModel.$validators.matchPassword = function(modelValue) {
+                return modelValue == scope.otherModelValue;
+            };
+
+            scope.$watch("otherModelValue", function() {
+                ngModel.$validate();
+            });
+        }
+    };
 });
