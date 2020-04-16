@@ -1,4 +1,35 @@
-<input type="text" ng-model="char.name" placeholder="Name">
-<input type="text" ng-model="char.image" placeholder="Image">
-<select ng-model="char.rarity" ng-options="rarity.id as rarity.name for rarity in rarities"></select>
-<input type="submit" ng-click="save(char)" value="Save" />
+<div class="container" style="margin-top: 58px;padding-left: 50px;">
+    <div ng-show="!$parent.loggedIn">
+        You must be logged
+    </div>
+    <div ng-show="$parent.loggedIn">
+        <form name="charCreateForm">
+            {{char}}
+            <div class="input-group mb-3">
+                <input type="text" ng-model="char.name" class="form-control" my-directive placeholder="Character name"
+                    required>
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Rarity</span>
+                </div>
+                <select ng-init="char.rarity = rarities[0].id" class="form-control" ng-model="char.rarity"
+                    ng-options="rarity.id as rarity.name for rarity in rarities" required></select>
+            </div>
+            <div class="input-group mb-3">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Series</span>
+                </div>
+                <select class="form-control" id="series_id" ng-options="option._id as option.name for option in options"
+                    model="char.series_id" required></select>
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Origin Series</span>
+                </div>
+                <select ng-init="char.rarity = rarities[0].id" class="form-control" ng-model="char.origin_series_id"
+                    ng-options="rarity.id as rarity.name for rarity in rarities" required></select>
+            </div>
+            <input type="file" id="inputFileToLoad" ng-model="char.image" placeholder="Image"
+                onchange="angular.element(this).scope().encodeImageFileAsURL()" valid-file required>
+            <div id="myImg"></div>
+            <input type="submit" class="btn btn-primary" ng-click="save(char)" value="Save" />
+        </form>
+    </div>
+</div>

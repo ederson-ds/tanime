@@ -40,6 +40,29 @@ const CharSchema = mongoose.Schema({
     }
 });
 
+const PreCharSchema = mongoose.Schema({
+    name: {
+        type: String,
+        require: true
+    },
+    image: {
+        type: String,
+        require: true
+    },
+    rarity: {
+        type: Number,
+        require: true
+    },
+    series_id: {
+        type: Number,
+        require: true
+    },
+    origin_series_id: {
+        type: Number,
+        require: true
+    }
+});
+
 const SeriesSchema = mongoose.Schema({
     name: {
         type: String,
@@ -79,6 +102,7 @@ const UsersSchema = mongoose.Schema({
 
 // compile schema to model
 var Char = mongoose.model('Char', CharSchema, 'char');
+var PreChar = mongoose.model('PreChar', PreCharSchema, 'prechar');
 var Series = mongoose.model('Series', SeriesSchema, 'series');
 var Preseries = mongoose.model('Preseries', PreSeriesSchema, 'preseries');
 var Users = mongoose.model('Users', UsersSchema, 'users');
@@ -133,7 +157,7 @@ app.get('/sessionValidate', function (req, res) {
     sess = req.session;
 
     if (sess.username) {
-        res.json({username: sess.username});
+        res.json({ username: sess.username });
     } else {
         res.json({});
     }
@@ -169,6 +193,22 @@ app.post('/signup', function (req, res) {
 
     users.save(function (err, users) {
         res.json(users);
+    });
+});
+
+app.post('/char/create', function (req, res) {
+    sess = req.session;
+    var prechar = new PreChar({
+        name: req.body.name,
+        image: req.body.image,
+        rarity: req.body.rarity,
+        series_id: req.body.series_id,
+        origin_series_id: req.body.origin_series_id,
+        username: sess.username
+    });
+
+    prechar.save(function (err, prechar) {
+        res.json(prechar);
     });
 });
 
