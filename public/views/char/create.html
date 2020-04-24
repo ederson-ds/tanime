@@ -1,0 +1,82 @@
+<div class="container" style="margin-top: 58px; padding-left: 50px;">
+  <div ng-show="!$parent.loggedIn">
+    You must be logged
+  </div>
+  <div ng-show="$parent.loggedIn">
+    {{char}}
+    <div ng-show="!loading">
+      <div class="fa-3x" style="text-align: center;">
+        <i class="fa fa-spinner fa-spin"></i>
+      </div>
+    </div>
+    <div ng-show="loading">
+      <form name="charCreateForm">
+        <div class="input-group mb-3">
+          <input
+            type="text"
+            ng-model="char.name"
+            class="form-control"
+            my-directive
+            placeholder="Character name"
+            required
+          />
+          <div class="input-group-prepend">
+            <span class="input-group-text">Rarity</span>
+          </div>
+          <select
+            ng-init="char.rarity = rarities[0].id"
+            class="form-control"
+            ng-model="char.rarity"
+            ng-options="rarity.id as rarity.name for rarity in rarities"
+            required
+          ></select>
+        </div>
+        <div class="input-group mb-3">
+          <div class="input-group-prepend">
+            <span class="input-group-text">Series</span>
+          </div>
+
+          <select class="form-control" ng-model="char.series_id">
+            <optgroup
+              ng-repeat="(name,group) in peopleInGroups"
+              label="{{name}}"
+            >
+              <option ng-repeat="option in group" value="{{option.id}}"
+                >{{option.name}}</option
+              >
+            </optgroup>
+          </select>
+
+          <div class="input-group-prepend">
+            <span class="input-group-text">Origin Series</span>
+          </div>
+          <select class="form-control" ng-model="char.origin_series_id">
+            <optgroup
+              ng-repeat="(name,group) in peopleInGroups"
+              label="{{name}}"
+            >
+              <option ng-repeat="option in group" value="{{option.id}}"
+                >{{option.name}}</option
+              >
+            </optgroup>
+          </select>
+        </div>
+        <input
+          type="file"
+          id="inputFileToLoad"
+          ng-model="char.image"
+          placeholder="Image"
+          onchange="angular.element(this).scope().encodeImageFileAsURL()"
+          required
+        />
+        <div id="myImg"></div>
+        <input
+          type="submit"
+          class="btn btn-primary"
+          ng-click="save(char)"
+          value="Save"
+        />
+      </form>
+    </div>
+  </div>
+</div>

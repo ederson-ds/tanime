@@ -1,0 +1,15 @@
+<div class="container" style="margin-top: 58px; padding-left: 50px;">
+  <div ng-show="!loading">
+    <div class="fa-3x" style="text-align: center;">
+      <i class="fa fa-spinner fa-spin"></i>
+    </div>
+  </div>
+  <div ng-show="loading">
+    <div ng-repeat="series in series">
+      <a href="/series/create/{{stringRefactory(series.name)}}"
+        >{{series.name | spaceless}}</a
+      >
+      <img src="{{series.image}}" class="seriesLogo" />
+    </div>
+  </div>
+</div>
