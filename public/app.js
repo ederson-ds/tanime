@@ -52,7 +52,12 @@ myApp.component("navbar", {
         $("body").css("background","linear-gradient(90deg, rgba(154, 154, 154, 1) 0%, rgba(236, 236, 236, 1) 38%, rgba(236, 236, 236, 1) 64%, rgba(154, 154, 154, 1) 100%)");
         toggle = false;
       }
-      
+    });
+    $( "#darkMode" ).hover(function() {
+      $("#darkMode").css("filter","brightness(150%)");
+    });
+    $( "#darkMode" ).mouseout(function() {
+      $("#darkMode").css("filter","brightness(100%)");
     });
   }
 });
