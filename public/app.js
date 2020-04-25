@@ -39,7 +39,22 @@ myApp.config(function ($routeProvider, $locationProvider) {
 
 myApp.component("navbar", {
   bindings: { in: '=' },
-  templateUrl: "components/navbar.html"
+  templateUrl: "components/navbar.html",
+  controller: function() {
+    let toggle = false;
+    $( "#darkMode" ).click(function() {
+      if(!toggle) {
+        $("#darkMode").attr("src","../img/on.png");
+        $("body").css("background","linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(84,168,187,1) 50%, rgba(0,0,0,1) 100%)");
+        toggle = true;
+      } else {
+        $("#darkMode").attr("src","../img/off.png");
+        $("body").css("background","linear-gradient(90deg, rgba(154, 154, 154, 1) 0%, rgba(236, 236, 236, 1) 38%, rgba(236, 236, 236, 1) 64%, rgba(154, 154, 154, 1) 100%)");
+        toggle = false;
+      }
+      
+    });
+  }
 });
 
 myApp.directive("myDirective", function () {
