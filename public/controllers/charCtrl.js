@@ -40,7 +40,7 @@ myApp.controller("charCtrl", function ($scope, $http, $location) {
   $scope.save = function (char) {
     if ($scope.charCreateForm.$valid) {
       $http.post("/char/create", char).then(function (response) {
-        $location.path("/");
+        $location.path("/user");
       });
     } else {
       console.log("invalido");

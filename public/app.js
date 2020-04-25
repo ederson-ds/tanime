@@ -41,7 +41,7 @@ myApp.component("navbar", {
   bindings: { in: '=' },
   templateUrl: "components/navbar.html",
   controller: function() {
-    let toggle = false;
+    var toggle = false;
     $( "#darkMode" ).click(function() {
       if(!toggle) {
         $("#darkMode").attr("src","../img/on.png");
@@ -55,6 +55,7 @@ myApp.component("navbar", {
     });
     $( "#darkMode" ).hover(function() {
       $("#darkMode").css("filter","brightness(150%)");
+      $("#darkMode").css("cursor","pointer");
     });
     $( "#darkMode" ).mouseout(function() {
       $("#darkMode").css("filter","brightness(100%)");
