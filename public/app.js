@@ -54,11 +54,11 @@ myApp.component("navbar", {
       }
     });
     $( "#darkMode" ).hover(function() {
-      $("#darkMode").css("filter","brightness(150%)");
+      $("#darkMode").css("-webkit-filter","brightness(150%)");
       $("#darkMode").css("cursor","pointer");
     });
     $( "#darkMode" ).mouseout(function() {
-      $("#darkMode").css("filter","brightness(100%)");
+      $("#darkMode").css("-webkit-filter","brightness(100%)");
     });
   }
 });
