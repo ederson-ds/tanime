@@ -17,6 +17,7 @@
               <th scope="col">Image</th>
               <th scope="col">Name</th>
               <th scope="col">Status</th>
+              <th scope="col">Edit</th>
             </tr>
           </thead>
           <tbody>
@@ -24,6 +25,9 @@
               <td><img src="{{series.image}}" width="100" /></td>
               <td>{{series.name}}</td>
               <td>Pending</td>
+              <td>
+                <a href="/series/create/{{series.name}}">Edit</a>
+              </td>
             </tr>
           </tbody>
         </table>
@@ -36,6 +40,7 @@
               <th scope="col">Image</th>
               <th scope="col">Name</th>
               <th scope="col">Status</th>
+              <th scope="col">Edit</th>
             </tr>
           </thead>
           <tbody>
@@ -43,6 +48,9 @@
               <td><img src="{{prechar.image}}" width="100" /></td>
               <td>{{prechar.name}}</td>
               <td>Pending</td>
+              <td>
+                <a href="/char/create/{{prechar.name}}">Edit</a>
+              </td>
             </tr>
           </tbody>
         </table>

@@ -63,10 +63,6 @@ const PreCharSchema = mongoose.Schema({
     type: String,
     require: true,
   },
-  origin_series_id: {
-    type: String,
-    require: true,
-  },
   username: {
     type: String,
     require: true,
@@ -111,7 +107,7 @@ const UsersSchema = mongoose.Schema({
   priority: {
     type: Number,
     require: true,
-  }
+  },
 });
 
 // compile schema to model
@@ -163,6 +159,20 @@ app.get("/api/series/create/:seriesname", function (req, res) {
   }
   var seriesname = req.params.seriesname;
   Series.findOne({ name: seriesname }, function (err, collection) {
+    res.json(collection);
+  });
+});
+
+app.get("/api/preseries/create/:seriesname", function (req, res) {
+  var seriesname = req.params.seriesname;
+  Preseries.findOne({ name: seriesname }, function (err, collection) {
+    res.json(collection);
+  });
+});
+
+app.get("/api/prechar/create/:charname", function (req, res) {
+  var charname = req.params.charname;
+  PreChar.findOne({ name: charname }, function (err, collection) {
     res.json(collection);
   });
 });
@@ -235,6 +245,19 @@ app.post("/char/create", function (req, res) {
   });
 });
 
+app.post("/prechar/create", function (req, res) {
+  sess = req.session;
+  var prechar = new PreChar({
+    name: req.body.name,
+    image: req.body.image,
+    username: sess.username,
+  });
+
+  prechar.save(function (err, prechar) {
+    res.json(prechar);
+  });
+});
+
 app.post("/series/create", function (req, res) {
   sess = req.session;
   // a document instance
@@ -265,6 +288,35 @@ app.get("/prechars", function (req, res) {
   sess = req.session;
   PreChar.find({ username: sess.username }, function (err, collection) {
     res.json(collection);
+  });
+});
+
+app.put("/api/prechar/create/:charname", function (req, res) {
+  const filter = { name: req.params.charname };
+  const update = { 
+    name: req.body.name,
+    image: req.body.image,
+    rarity: req.body.rarity,
+    series_id: req.body.series_id
+  };
+  PreChar.findOneAndUpdate(filter, update, { upsert: true }, function (
+    err,
+    doc
+  ) {
+    if (err) return res.send(500, { error: err });
+    return res.send("Succesfully saved.");
+  });
+});
+
+app.put("/api/preseries/create/:seriesname", function (req, res) {
+  const filter = { name: req.params.seriesname };
+  const update = { name: req.body.name, image: req.body.image };
+  Preseries.findOneAndUpdate(filter, update, { upsert: true }, function (
+    err,
+    doc
+  ) {
+    if (err) return res.send(500, { error: err });
+    return res.send("Succesfully saved.");
   });
 });
 

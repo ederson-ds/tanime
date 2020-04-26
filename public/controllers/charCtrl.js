@@ -1,4 +1,4 @@
-myApp.controller("charCtrl", function ($scope, $http, $location) {
+myApp.controller("charCtrl", function ($scope, $http, $location, $routeParams) {
   $scope.index = function () {
     $http.get("/series").then(function (response) {
       $scope.series = response.data;
@@ -35,13 +35,57 @@ myApp.controller("charCtrl", function ($scope, $http, $location) {
         $scope.loading = true;
       });
     });
+  } else {
+    // Update
+    $scope.peopleInGroups = {
+      PreSeries: [],
+      Series: [],
+    };
+
+    $http.get("/preseries").then(function (response) {
+      response.data.forEach((element) => {
+        $scope.peopleInGroups.PreSeries.push({
+          id: element._id,
+          name: element.name,
+        });
+      });
+
+      $http.get("/series").then(function (response) {
+        response.data.forEach((element) => {
+          $scope.peopleInGroups.Series.push({
+            id: element._id,
+            name: element.name,
+          });
+        });
+
+        $http
+          .get("/api/prechar/create/" + $routeParams.charname)
+          .then(function (response) {
+            var char = response.data;
+            $scope.char = char;
+
+            $scope.updateImgBase64($scope.char.image);
+            $scope.loading = true;
+          });
+      });
+    });
   }
 
   $scope.save = function (char) {
     if ($scope.charCreateForm.$valid) {
-      $http.post("/char/create", char).then(function (response) {
-        $location.path("/user");
-      });
+      if ($routeParams.charname) {
+        // Update
+        $http
+          .put("api/prechar/create/" + $routeParams.charname, char)
+          .then(function (response) {
+            $location.path("/user");
+          });
+      } else {
+        //Create
+        $http.post("/prechar/create", char).then(function (response) {
+          $location.path("/user");
+        });
+      }
     } else {
       console.log("invalido");
     }
@@ -64,7 +108,6 @@ myApp.controller("charCtrl", function ($scope, $http, $location) {
 
   $scope.updateImgBase64 = function (imageSrc) {
     $scope.char.image = imageSrc;
-    console.log($scope.char.image);
     var newImage = document.createElement("img");
     newImage.style = "width: 100px;";
     newImage.src = imageSrc;
@@ -74,39 +117,39 @@ myApp.controller("charCtrl", function ($scope, $http, $location) {
   $scope.rarities = [
     {
       name: "Very Rare",
-      id: "0",
+      id: 0,
     },
     {
       name: "Epic",
-      id: "1",
+      id: 1,
     },
     {
       name: "Legendary",
-      id: "2",
+      id: 2,
     },
     {
       name: "Common",
-      id: "3",
+      id: 3,
     },
     {
       name: "Rare",
-      id: "4",
+      id: 4,
     },
     {
       name: "Empyrean",
-      id: "5",
+      id: 5,
     },
     {
       name: "True Divinity",
-      id: "6",
+      id: 6,
     },
     {
       name: "Void Tier",
-      id: "7",
+      id: 7,
     },
     {
       name: "God",
-      id: "8",
+      id: 8,
     },
   ];
 

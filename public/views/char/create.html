@@ -3,7 +3,6 @@
     You must be logged
   </div>
   <div ng-show="$parent.loggedIn">
-    {{char}}
     <div ng-show="!loading">
       <div class="fa-3x" style="text-align: center;">
         <i class="fa fa-spinner fa-spin"></i>
@@ -46,20 +45,6 @@
               >
             </optgroup>
           </select>
-
-          <div class="input-group-prepend">
-            <span class="input-group-text">Origin Series</span>
-          </div>
-          <select class="form-control" ng-model="char.origin_series_id">
-            <optgroup
-              ng-repeat="(name,group) in peopleInGroups"
-              label="{{name}}"
-            >
-              <option ng-repeat="option in group" value="{{option.id}}"
-                >{{option.name}}</option
-              >
-            </optgroup>
-          </select>
         </div>
         <input
           type="file"
@@ -67,7 +52,6 @@
           ng-model="char.image"
           placeholder="Image"
           onchange="angular.element(this).scope().encodeImageFileAsURL()"
-          required
         />
         <div id="myImg"></div>
         <input

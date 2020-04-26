@@ -12,6 +12,10 @@ myApp.config(function ($routeProvider, $locationProvider) {
       templateUrl: "views/char/create.html",
       controller: "charCtrl",
     })
+    .when("/char/create/:charname", {
+      templateUrl: "views/char/create.html",
+      controller: "charCtrl",
+    })
     .when("/series/create", {
       templateUrl: "views/series/create.html",
       controller: "seriesCtrl",
