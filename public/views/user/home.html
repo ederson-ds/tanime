@@ -9,6 +9,9 @@
       </div>
     </div>
     <div ng-show="loading">
+      <div ng-show="priority == 0">
+        <a href="/admin">Admin</a>
+      </div>
       <div>
         <h2>Series pending to approve</h2>
         <table class="table table-dark table-striped">
@@ -55,6 +58,7 @@
           </tbody>
         </table>
       </div>
+      <a href="/logout">Logout</a>
     </div>
   </div>
 </div>
