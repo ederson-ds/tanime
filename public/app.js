@@ -41,22 +41,32 @@ myApp.config(function ($routeProvider, $locationProvider) {
     });
 });
 
+
 myApp.component("navbar", {
   bindings: { in: '=' },
   templateUrl: "components/navbar.html",
   controller: function() {
-    var toggle = false;
+    //var toggle = false;
+    var darkmode = localStorage.getItem("darkmode");
+    var darkmodeToggle = document.querySelector("#darkMode");
+
+    if (darkmode === "enabled"){
+      document.body.classList.toggle("darkmode");
+      $("#darkMode").attr("src","../img/on.png");
+        localStorage.setItem("darkmode","enabled");
+    }
+
     $( "#darkMode" ).click(function() {
-      if(!toggle) {
+      document.body.classList.toggle("darkmode");
+      if(darkmode == "disabled") {
         $("#darkMode").attr("src","../img/on.png");
-        $("body").css("background","linear-gradient(90deg, rgba(0,0,0,1) 0%, rgba(84,168,187,1) 50%, rgba(0,0,0,1) 100%)");
-        toggle = true;
+        localStorage.setItem("darkmode","enabled");
       } else {
         $("#darkMode").attr("src","../img/off.png");
-        $("body").css("background","linear-gradient(90deg, rgba(154, 154, 154, 1) 0%, rgba(236, 236, 236, 1) 38%, rgba(236, 236, 236, 1) 64%, rgba(154, 154, 154, 1) 100%)");
-        toggle = false;
+        localStorage.setItem("darkmode","disabled");
       }
     });
+
     $( "#darkMode" ).hover(function() {
       $("#darkMode").css("-webkit-filter","brightness(150%)");
       $("#darkMode").css("cursor","pointer");
