@@ -1,4 +1,4 @@
-var myApp = angular.module("myApp", ["ngRoute"]);
+var myApp = angular.module("myApp", ["ngRoute", "angular.filter"]);
 
 myApp.config(function ($routeProvider, $locationProvider) {
   $locationProvider.html5Mode(true);
@@ -35,6 +35,18 @@ myApp.config(function ($routeProvider, $locationProvider) {
     .when("/user", {
       templateUrl: "views/user/home.html",
       controller: "userCtrl",
+    })
+    .when("/admin", {
+      templateUrl: "views/admin/admin.html",
+      controller: "adminCtrl",
+    })
+    .when("/logout", {
+      templateUrl: "views/logout/logout.html",
+      controller: "logoutCtrl",
+    })
+    .when("/series/approve/:_id", {
+      templateUrl: "views/approve/approve.html",
+      controller: "approveCtrl",
     })
     .otherwise({
       template: "<h1>None</h1><p>Nothing has been selected</p>",

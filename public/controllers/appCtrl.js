@@ -4,6 +4,7 @@ myApp.controller('appCtrl', function ($scope, $http, $location) {
         if(response.data.username) {
             $scope.loggedIn = true;
             $scope.sessUsername = response.data.username;
+            $scope.priority = response.data.priority;
         }
     });
 });

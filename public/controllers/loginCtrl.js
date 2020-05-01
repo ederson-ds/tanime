@@ -6,6 +6,7 @@ myApp.controller('loginCtrl', function ($scope, $http, $location) {
                 if (response.data.username) {
                     $scope.$parent.loggedIn = true;
                     $scope.$parent.sessUsername = response.data.username;
+                    $scope.$parent.priority = response.data.priority;
                     $location.path("/user");
                 } else {
                     $scope.usersExists = true;

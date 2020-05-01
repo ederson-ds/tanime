@@ -163,6 +163,29 @@ app.get("/api/series/create/:seriesname", function (req, res) {
   });
 });
 
+app.get("/series/approve/:_id", function (req, res) {
+  sess = req.session;
+
+  //Admin
+  if (sess.priority == 0) {
+    var _id = req.params._id;
+    Preseries.findOne({ _id: _id }, function (err, collection) {
+      Preseries.deleteOne({ _id: _id }, function (err) {
+        if (err) return handleError(err);
+      });
+      var series = new Series({
+        name: collection.name,
+        image: collection.image,
+      });
+      series.save(function (err, series) {
+        res.json(series);
+      });
+    });
+  } else {
+    res.json({ err: "You don't have permission!" });
+  }
+});
+
 app.get("/api/preseries/create/:seriesname", function (req, res) {
   var seriesname = req.params.seriesname;
   Preseries.findOne({ name: seriesname }, function (err, collection) {
@@ -181,7 +204,7 @@ app.get("/sessionValidate", function (req, res) {
   sess = req.session;
 
   if (sess.username) {
-    res.json({ username: sess.username });
+    res.json({ username: sess.username, priority: sess.priority });
   } else {
     res.json({});
   }
@@ -206,6 +229,7 @@ app.post("/login/exists", function (req, res) {
     function (err, collection) {
       if (collection) {
         sess.username = collection.username;
+        sess.priority = collection.priority;
         res.json(collection);
       } else {
         res.json({});
@@ -277,9 +301,21 @@ app.post("/series/create", function (req, res) {
   });
 });
 
+app.get("/admin/preseries", function (req, res) {
+  Preseries.find({}, function (err, collection) {
+    res.json(collection);
+  });
+});
+
 app.get("/preseries", function (req, res) {
   sess = req.session;
   Preseries.find({ username: sess.username }, function (err, collection) {
+    res.json(collection);
+  });
+});
+
+app.get("/admin/prechars", function (req, res) {
+  PreChar.find({}, function (err, collection) {
     res.json(collection);
   });
 });
@@ -291,13 +327,18 @@ app.get("/prechars", function (req, res) {
   });
 });
 
+app.get("/api/logout", function (req, res) {
+  req.session.destroy();
+  res.json({ logout: "Logout!" });
+});
+
 app.put("/api/prechar/create/:charname", function (req, res) {
   const filter = { name: req.params.charname };
-  const update = { 
+  const update = {
     name: req.body.name,
     image: req.body.image,
     rarity: req.body.rarity,
-    series_id: req.body.series_id
+    series_id: req.body.series_id,
   };
   PreChar.findOneAndUpdate(filter, update, { upsert: true }, function (
     err,
