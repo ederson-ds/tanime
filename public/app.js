@@ -58,7 +58,6 @@ myApp.component("navbar", {
   bindings: { in: '=' },
   templateUrl: "components/navbar.html",
   controller: function() {
-    //var toggle = false;
     var darkmode = localStorage.getItem("darkmode");
     var darkmodeToggle = document.querySelector("#darkMode");
 
