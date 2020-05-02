@@ -28,7 +28,8 @@
                 <td>{{series.name}}</td>
                 <td>Pending</td>
                 <td>
-                  <a href="/series/approve/{{series._id}}">Approve</a>
+                  <a href="/series/approve/{{series._id}}" class="btn btn-success">Approve</a>
+                  <button ng-click="delete(series._id)" class="btn btn-danger">Delete</button>
                 </td>
               </tr>
             </tbody>

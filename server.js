@@ -16,8 +16,11 @@ app.use(
 
 // make a connection
 mongoose.connect(
-  "mongodb+srv://dbUser:zge3TnJFfYe839Lh@cluster0-l3oqr.mongodb.net/tanime",
-  { useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false }
+  "mongodb+srv://dbUser:zge3TnJFfYe839Lh@cluster0-l3oqr.mongodb.net/tanime", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useFindAndModify: false
+  }
 );
 
 // get reference to database
@@ -133,7 +136,9 @@ db.once("open", function () {
     });*/
 });
 
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.urlencoded({
+  extended: true
+}));
 app.use(
   bodyParser.json({
     extended: true,
@@ -158,7 +163,9 @@ app.get("/api/series/create/:seriesname", function (req, res) {
     //return;
   }
   var seriesname = req.params.seriesname;
-  Series.findOne({ name: seriesname }, function (err, collection) {
+  Series.findOne({
+    name: seriesname
+  }, function (err, collection) {
     res.json(collection);
   });
 });
@@ -169,8 +176,12 @@ app.get("/series/approve/:_id", function (req, res) {
   //Admin
   if (sess.priority == 0) {
     var _id = req.params._id;
-    Preseries.findOne({ _id: _id }, function (err, collection) {
-      Preseries.deleteOne({ _id: _id }, function (err) {
+    Preseries.findOne({
+      _id: _id
+    }, function (err, collection) {
+      Preseries.deleteOne({
+        _id: _id
+      }, function (err) {
         if (err) return handleError(err);
       });
       var series = new Series({
@@ -182,20 +193,50 @@ app.get("/series/approve/:_id", function (req, res) {
       });
     });
   } else {
-    res.json({ err: "You don't have permission!" });
+    res.json({
+      err: "You don't have permission!"
+    });
+  }
+});
+
+app.get("/api/series/delete/:_id", function (req, res) {
+  sess = req.session;
+
+  //Admin
+  if (sess.priority == 0) {
+    var _id = req.params._id;
+
+    Preseries.deleteOne({
+      _id: _id
+    }, function (err) {
+      if (err) return handleError(err);
+    });
+
+    Preseries.find({}, function (err, collection) {
+      res.json(collection);
+    });
+
+  } else {
+    res.json({
+      err: "You don't have permission!"
+    });
   }
 });
 
 app.get("/api/preseries/create/:seriesname", function (req, res) {
   var seriesname = req.params.seriesname;
-  Preseries.findOne({ name: seriesname }, function (err, collection) {
+  Preseries.findOne({
+    name: seriesname
+  }, function (err, collection) {
     res.json(collection);
   });
 });
 
 app.get("/api/prechar/create/:charname", function (req, res) {
   var charname = req.params.charname;
-  PreChar.findOne({ name: charname }, function (err, collection) {
+  PreChar.findOne({
+    name: charname
+  }, function (err, collection) {
     res.json(collection);
   });
 });
@@ -204,7 +245,10 @@ app.get("/sessionValidate", function (req, res) {
   sess = req.session;
 
   if (sess.username) {
-    res.json({ username: sess.username, priority: sess.priority });
+    res.json({
+      username: sess.username,
+      priority: sess.priority
+    });
   } else {
     res.json({});
   }
@@ -217,15 +261,19 @@ app.get("/char", function (req, res) {
 });
 
 app.post("/login/usernameexists", function (req, res) {
-  Users.findOne({ username: req.body.username }, function (err, collection) {
+  Users.findOne({
+    username: req.body.username
+  }, function (err, collection) {
     res.json(collection);
   });
 });
 
 app.post("/login/exists", function (req, res) {
   sess = req.session;
-  Users.findOne(
-    { username: req.body.username, password: req.body.password },
+  Users.findOne({
+      username: req.body.username,
+      password: req.body.password
+    },
     function (err, collection) {
       if (collection) {
         sess.username = collection.username;
@@ -309,7 +357,9 @@ app.get("/admin/preseries", function (req, res) {
 
 app.get("/preseries", function (req, res) {
   sess = req.session;
-  Preseries.find({ username: sess.username }, function (err, collection) {
+  Preseries.find({
+    username: sess.username
+  }, function (err, collection) {
     res.json(collection);
   });
 });
@@ -322,53 +372,81 @@ app.get("/admin/prechars", function (req, res) {
 
 app.get("/prechars", function (req, res) {
   sess = req.session;
-  PreChar.find({ username: sess.username }, function (err, collection) {
+  PreChar.find({
+    username: sess.username
+  }, function (err, collection) {
     res.json(collection);
   });
 });
 
 app.get("/api/logout", function (req, res) {
   req.session.destroy();
-  res.json({ logout: "Logout!" });
+  res.json({
+    logout: "Logout!"
+  });
 });
 
 app.put("/api/prechar/create/:charname", function (req, res) {
-  const filter = { name: req.params.charname };
+  const filter = {
+    name: req.params.charname
+  };
   const update = {
     name: req.body.name,
     image: req.body.image,
     rarity: req.body.rarity,
     series_id: req.body.series_id,
   };
-  PreChar.findOneAndUpdate(filter, update, { upsert: true }, function (
+  PreChar.findOneAndUpdate(filter, update, {
+    upsert: true
+  }, function (
     err,
     doc
   ) {
-    if (err) return res.send(500, { error: err });
+    if (err) return res.send(500, {
+      error: err
+    });
     return res.send("Succesfully saved.");
   });
 });
 
 app.put("/api/preseries/create/:seriesname", function (req, res) {
-  const filter = { name: req.params.seriesname };
-  const update = { name: req.body.name, image: req.body.image };
-  Preseries.findOneAndUpdate(filter, update, { upsert: true }, function (
+  const filter = {
+    name: req.params.seriesname
+  };
+  const update = {
+    name: req.body.name,
+    image: req.body.image
+  };
+  Preseries.findOneAndUpdate(filter, update, {
+    upsert: true
+  }, function (
     err,
     doc
   ) {
-    if (err) return res.send(500, { error: err });
+    if (err) return res.send(500, {
+      error: err
+    });
     return res.send("Succesfully saved.");
   });
 });
 
 app.put("/series/create/:seriesname", function (req, res) {
-  const filter = { name: req.params.seriesname };
-  const update = { name: req.body.name, image: req.body.image };
-  Series.findOneAndUpdate(filter, update, { upsert: true }, function (
+  const filter = {
+    name: req.params.seriesname
+  };
+  const update = {
+    name: req.body.name,
+    image: req.body.image
+  };
+  Series.findOneAndUpdate(filter, update, {
+    upsert: true
+  }, function (
     err,
     doc
   ) {
-    if (err) return res.send(500, { error: err });
+    if (err) return res.send(500, {
+      error: err
+    });
     return res.send("Succesfully saved.");
   });
 

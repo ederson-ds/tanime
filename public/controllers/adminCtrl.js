@@ -8,4 +8,10 @@ myApp.controller('adminCtrl', function ($scope, $http, $location) {
             $scope.loading = true;
         });
     });
+
+    $scope.delete = function (_id) {
+        $http.get("/api/series/delete/" + _id).then(function (response) {
+            $scope.series = response.data;
+        });
+    }
 });
