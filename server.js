@@ -1,10 +1,10 @@
-const express = require("express");
-const session = require("express-session");
-const mongoose = require("mongoose");
-const app = express();
-const bodyParser = require("body-parser");
+var express = require("express");
+var session = require("express-session");
+var mongoose = require("mongoose");
+var app = express();
+var bodyParser = require("body-parser");
 var path = require("path");
-const PORT = process.env.PORT || 3000;
+var PORT = process.env.PORT || 3000;
 
 app.use(
   session({
@@ -26,7 +26,7 @@ mongoose.connect(
 // get reference to database
 var db = mongoose.connection;
 
-const CharSchema = mongoose.Schema({
+var CharSchema = mongoose.Schema({
   name: {
     type: String,
     require: true,
@@ -49,7 +49,7 @@ const CharSchema = mongoose.Schema({
   },
 });
 
-const PreCharSchema = mongoose.Schema({
+var PreCharSchema = mongoose.Schema({
   name: {
     type: String,
     require: true,
@@ -72,7 +72,7 @@ const PreCharSchema = mongoose.Schema({
   },
 });
 
-const SeriesSchema = mongoose.Schema({
+var SeriesSchema = mongoose.Schema({
   name: {
     type: String,
     require: true,
@@ -83,7 +83,7 @@ const SeriesSchema = mongoose.Schema({
   },
 });
 
-const PreSeriesSchema = mongoose.Schema({
+var PreSeriesSchema = mongoose.Schema({
   name: {
     type: String,
     require: true,
@@ -98,7 +98,7 @@ const PreSeriesSchema = mongoose.Schema({
   },
 });
 
-const UsersSchema = mongoose.Schema({
+var UsersSchema = mongoose.Schema({
   username: {
     type: String,
     require: true,
@@ -387,10 +387,10 @@ app.get("/api/logout", function (req, res) {
 });
 
 app.put("/api/prechar/create/:charname", function (req, res) {
-  const filter = {
+  var filter = {
     name: req.params.charname
   };
-  const update = {
+  var update = {
     name: req.body.name,
     image: req.body.image,
     rarity: req.body.rarity,
@@ -410,10 +410,10 @@ app.put("/api/prechar/create/:charname", function (req, res) {
 });
 
 app.put("/api/preseries/create/:seriesname", function (req, res) {
-  const filter = {
+  var filter = {
     name: req.params.seriesname
   };
-  const update = {
+  var update = {
     name: req.body.name,
     image: req.body.image
   };
@@ -431,10 +431,10 @@ app.put("/api/preseries/create/:seriesname", function (req, res) {
 });
 
 app.put("/series/create/:seriesname", function (req, res) {
-  const filter = {
+  var filter = {
     name: req.params.seriesname
   };
-  const update = {
+  var update = {
     name: req.body.name,
     image: req.body.image
   };
