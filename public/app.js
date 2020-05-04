@@ -69,7 +69,6 @@ myApp.component("navbar", {
 
     $( "#darkMode" ).click(function() {
       document.body.classList.toggle("darkmode");
-      console.log(darkmode);
       if(darkmode === "disabled") {
         $("#darkMode").attr("src","../img/on.png");
         localStorage.setItem("darkmode","enabled");
