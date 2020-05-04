@@ -27,7 +27,17 @@ myApp.controller("seriesCtrl", function (
       fileReader.onload = function (fileLoadedEvent) {
         var srcData = fileLoadedEvent.target.result; // <--- data: base64
 
-        $scope.updateImgBase64(srcData);
+        $("#scream").attr("src", srcData);
+        setTimeout(function () {
+          var c = document.getElementById("myCanvas");
+          var ctx = c.getContext("2d");
+          ctx.clearRect(0, 0, c.width, c.height);
+          var img = document.getElementById("scream");
+          ctx.drawImage(img, 0, 0, 320, 200);
+          var pngUrl = c.toDataURL();
+          $scope.updateImgBase64(pngUrl);
+        }, 500);
+
       };
       fileReader.readAsDataURL(fileToLoad);
     }

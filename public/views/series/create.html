@@ -8,6 +8,9 @@
             <input type="file" id="inputFileToLoad" ng-model="series.image" placeholder="Image"
                 onchange="angular.element(this).scope().encodeImageFileAsURL()">
             <div id="myImg"></div>
+
+            <img id="scream" src="" style="display: none;">
+            <canvas id="myCanvas" width="320" height="200" style="border:1px solid #d3d3d3;display: none;"></canvas>
             <input type="submit" class="btn btn-primary" ng-click="save(series)" value="Save" />
         </div>
     </div>
