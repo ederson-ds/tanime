@@ -62,7 +62,6 @@ myApp.component("navbar", {
     var darkmodeToggle = document.querySelector("#darkMode");
 
     if (darkmode === "enabled"){
-      console.log("teste1");
       document.body.classList.toggle("darkmode");
       $("#darkMode").attr("src","../img/on.png");
         localStorage.setItem("darkmode","enabled");
@@ -72,11 +71,9 @@ myApp.component("navbar", {
       document.body.classList.toggle("darkmode");
       console.log(darkmode);
       if(darkmode === "disabled") {
-        console.log("teste2");
         $("#darkMode").attr("src","../img/on.png");
         localStorage.setItem("darkmode","enabled");
       } else if (darkmode === "enabled") {
-        console.log("teste3");
         $("#darkMode").attr("src","../img/off.png");
         localStorage.setItem("darkmode","disabled");
       }
