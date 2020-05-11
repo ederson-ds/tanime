@@ -17,10 +17,10 @@ app.use(
 // make a connection
 mongoose.connect(
   "mongodb+srv://dbUser:zge3TnJFfYe839Lh@cluster0-l3oqr.mongodb.net/tanime", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-    useFindAndModify: false
-  }
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useFindAndModify: false
+}
 );
 
 // get reference to database
@@ -87,6 +87,10 @@ var PreSeriesSchema = mongoose.Schema({
   name: {
     type: String,
     require: true,
+  },
+  previousname: {
+    type: String,
+    require: false,
   },
   image: {
     type: String,
@@ -179,17 +183,45 @@ app.get("/series/approve/:_id", function (req, res) {
     Preseries.findOne({
       _id: _id
     }, function (err, collection) {
-      Preseries.deleteOne({
-        _id: _id
-      }, function (err) {
-        if (err) return handleError(err);
-      });
-      var series = new Series({
-        name: collection.name,
-        image: collection.image,
-      });
-      series.save(function (err, series) {
-        res.json(series);
+      var previousname = collection.previousname;
+      var name = collection.name;
+      var image = collection.image;
+      Series.findOne({
+        name: previousname
+      }, function (err, collection) {
+        if (collection) {
+          var filter = {
+            name: previousname
+          };
+          var update = {
+            name: name,
+            image: image,
+          };
+          Series.findOneAndUpdate(filter, update, {
+            upsert: true
+          }, function (
+            err,
+            doc
+          ) {
+            if (err) return res.send(500, {
+              error: err
+            });
+            return res.send("Succesfully saved.");
+          });
+        } else {
+          var series = new Series({
+            name: name,
+            image: image,
+          });
+          series.save(function (err, series) {
+            res.json(series);
+          });
+        }
+        Preseries.deleteOne({
+          _id: _id
+        }, function (err) {
+          if (err) return handleError(err);
+        });
       });
     });
   } else {
@@ -199,7 +231,30 @@ app.get("/series/approve/:_id", function (req, res) {
   }
 });
 
-app.get("/api/series/delete/:_id", function (req, res) {
+app.delete("/api/series/delete/:_id", function (req, res) {
+  sess = req.session;
+
+  //Admin
+  if (sess.priority == 0) {
+    var _id = req.params._id;
+
+    Series.deleteOne({
+      _id: _id
+    }, function (err) {
+      if (err) return handleError(err);
+      res.json({
+        success: "Series deleted!"
+      });
+    });
+
+  } else {
+    res.json({
+      err: "You don't have permission!"
+    });
+  }
+});
+
+app.get("/api/preseries/delete/:_id", function (req, res) {
   sess = req.session;
 
   //Admin
@@ -223,6 +278,64 @@ app.get("/api/series/delete/:_id", function (req, res) {
   }
 });
 
+app.post("/api/preseries/create/:seriesname", function (req, res) {
+  var seriesname = req.params.seriesname;
+
+  Preseries.findOne({
+    name: seriesname
+  }, function (err, collection) {
+    if (!collection) {
+      var preseries = new Preseries({
+        name: req.body.name,
+        previousname: seriesname,
+        image: req.body.image,
+        username: sess.username,
+      });
+
+      preseries.save(function (err, preseries) {
+        res.json(preseries);
+      });
+    } else {
+      var filter = {
+        name: seriesname
+      };
+      var update = {
+        name: req.body.name,
+        image: req.body.image
+      };
+      Preseries.findOneAndUpdate(filter, update, {
+        upsert: true
+      }, function (
+        err,
+        doc
+      ) {
+        if (err) return res.send(500, {
+          error: err
+        });
+        return res.send("Succesfully saved.");
+      });
+    }
+  });
+});
+
+app.get("/api/preseries/create/:seriesname", function (req, res) {
+  var seriesname = req.params.seriesname;
+  Series.findOne({
+    name: seriesname
+  }, function (err, collection) {
+    if (!collection) {
+      Preseries.findOne({
+        name: seriesname
+      }, function (err, collection) {
+        res.json(collection);
+      });
+    } else {
+      res.json(collection);
+    }
+  });
+});
+
+/*
 app.get("/api/preseries/create/:seriesname", function (req, res) {
   var seriesname = req.params.seriesname;
   Preseries.findOne({
@@ -230,7 +343,7 @@ app.get("/api/preseries/create/:seriesname", function (req, res) {
   }, function (err, collection) {
     res.json(collection);
   });
-});
+});*/
 
 app.get("/api/prechar/create/:charname", function (req, res) {
   var charname = req.params.charname;
@@ -271,9 +384,9 @@ app.post("/login/usernameexists", function (req, res) {
 app.post("/login/exists", function (req, res) {
   sess = req.session;
   Users.findOne({
-      username: req.body.username,
-      password: req.body.password
-    },
+    username: req.body.username,
+    password: req.body.password
+  },
     function (err, collection) {
       if (collection) {
         sess.username = collection.username;

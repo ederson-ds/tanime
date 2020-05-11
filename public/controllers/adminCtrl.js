@@ -10,7 +10,7 @@ myApp.controller('adminCtrl', function ($scope, $http, $location) {
     });
 
     $scope.delete = function (_id) {
-        $http.get("/api/series/delete/" + _id).then(function (response) {
+        $http.get("/api/preseries/delete/" + _id).then(function (response) {
             $scope.series = response.data;
         });
     }

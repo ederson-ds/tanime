@@ -12,6 +12,9 @@
             <img id="scream" src="" style="display: none;">
             <canvas id="myCanvas" width="320" height="200" style="border:1px solid #d3d3d3;display: none;"></canvas>
             <input type="submit" class="btn btn-primary" ng-click="save(series)" value="Save" />
+            <span ng-show="$parent.priority == 0 && editing">
+                <a href="/series/delete/{{series._id}}" class="btn btn-danger">Delete</a>
+            </span>
         </div>
     </div>
 </div>

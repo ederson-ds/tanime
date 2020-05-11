@@ -24,6 +24,10 @@ myApp.config(function ($routeProvider, $locationProvider) {
       templateUrl: "views/series/create.html",
       controller: "seriesCtrl",
     })
+    .when("/series/delete/:seriesnamedelete", {
+      templateUrl: "views/series/delete.html",
+      controller: "seriesCtrl",
+    })
     .when("/login", {
       templateUrl: "views/login/login.html",
       controller: "loginCtrl",

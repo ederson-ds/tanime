@@ -7,6 +7,7 @@ myApp.controller("seriesCtrl", function (
   $scope.series = {};
 
   if ($routeParams.seriesname) {
+    $scope.editing = true;
     // Update
     $http
       .get("api/preseries/create/" + $routeParams.seriesname)
@@ -15,6 +16,13 @@ myApp.controller("seriesCtrl", function (
         $scope.series = series;
 
         $scope.updateImgBase64($scope.series.image);
+      });
+  } else if($routeParams.seriesnamedelete) {
+    // Delete
+    $http
+      .delete("api/series/delete/" + $routeParams.seriesnamedelete)
+      .then(function (response) {
+        $location.path("/");
       });
   }
 
@@ -55,15 +63,21 @@ myApp.controller("seriesCtrl", function (
     if ($routeParams.seriesname) {
       // Update
       $http
-        .put("api/preseries/create/" + $routeParams.seriesname, series)
+        .post("api/preseries/create/" + $routeParams.seriesname, series)
         .then(function (response) {
           $location.path("/user");
         });
+      /*
+      $http
+        .put("api/preseries/create/" + $routeParams.seriesname, series)
+        .then(function (response) {
+          $location.path("/user");
+        });*/
     } else {
       //Create
       $http.post("/series/create", series).then(function (response) {
         console.log("salvou com sucesso");
-        $location.path("/");
+        $location.path("/user");
       });
     }
   };
