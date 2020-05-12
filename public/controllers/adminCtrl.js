@@ -9,9 +9,15 @@ myApp.controller('adminCtrl', function ($scope, $http, $location) {
         });
     });
 
-    $scope.delete = function (_id) {
+    $scope.deleteSeries = function (_id) {
         $http.get("/api/preseries/delete/" + _id).then(function (response) {
             $scope.series = response.data;
+        });
+    }
+
+    $scope.deleteChar = function (_id) {
+        $http.delete("/api/prechars/delete/" + _id).then(function (response) {
+            $scope.prechars = response.data;
         });
     }
 });

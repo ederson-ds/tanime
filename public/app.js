@@ -48,7 +48,11 @@ myApp.config(function ($routeProvider, $locationProvider) {
       templateUrl: "views/logout/logout.html",
       controller: "logoutCtrl",
     })
-    .when("/series/approve/:_id", {
+    .when("/series/approve/:series_id", {
+      templateUrl: "views/approve/approve.html",
+      controller: "approveCtrl",
+    })
+    .when("/char/approve/:char_id", {
       templateUrl: "views/approve/approve.html",
       controller: "approveCtrl",
     })

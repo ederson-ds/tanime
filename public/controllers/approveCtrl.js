@@ -6,7 +6,13 @@ myApp.controller("approveCtrl", function (
 ) {
   console.log("approveCtrl controller");
 
-  $http.get("/series/approve/" + $routeParams._id).then(function (response) {
-    $location.path("/");
-  });
+  if ($routeParams.series_id) {
+    $http.get("/series/approve/" + $routeParams.series_id).then(function (response) {
+      $location.path("/");
+    });
+  } else if ($routeParams.char_id) {
+    $http.get("/char/approve/" + $routeParams.char_id).then(function (response) {
+      $location.path("/");
+    });
+  }
 });

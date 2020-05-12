@@ -22,6 +22,22 @@
             </a>
           </div>
         </div>
+        <div class="row">
+          <div ng-repeat="char in series.chars[0]" class="col-sm-1-10" style="padding: 0 !important;">
+            <div ng-class="getRarity({{char.rarity}})"
+              style="border: 1px solid;border-radius: 10px;text-align: center;width: 102px;margin-top: 10px;font-size: 10pt;">
+              <div style="padding: 10px 10px 0;">
+                <img class="persona-img" src="{{char.image}}" alt="Card image cap" style="border: 1px solid white;">
+              </div>
+              <div>
+                {{char.name}}
+              </div>
+              <div>
+                {{rarities[char.rarity].name}}
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>

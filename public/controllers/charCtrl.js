@@ -1,8 +1,20 @@
 myApp.controller("charCtrl", function ($scope, $http, $location, $routeParams) {
   $scope.index = function () {
+    console.log("teste");
     $http.get("/series").then(function (response) {
       $scope.series = response.data;
-      $scope.loading = true;
+
+      $scope.series.forEach((series, i) => {
+        $scope.series[i].chars = [];
+        var length = $scope.series.length;
+        $http.get("/api/char/" + series._id).then(function (response) {
+          var chars = response.data;
+          $scope.series[i].chars.push(chars);
+          if(i == 0) {
+            $scope.loading = true;
+          }
+        });
+      });
     });
   };
 
@@ -63,6 +75,7 @@ myApp.controller("charCtrl", function ($scope, $http, $location, $routeParams) {
           .then(function (response) {
             var char = response.data;
             $scope.char = char;
+            console.log($scope.char);
 
             $scope.updateImgBase64($scope.char.image);
             $scope.loading = true;
@@ -100,7 +113,17 @@ myApp.controller("charCtrl", function ($scope, $http, $location, $routeParams) {
       fileReader.onload = function (fileLoadedEvent) {
         var srcData = fileLoadedEvent.target.result; // <--- data: base64
 
-        $scope.updateImgBase64(srcData);
+        $("#scream").attr("src", srcData);
+        setTimeout(function () {
+          var c = document.getElementById("myCanvas");
+          var ctx = c.getContext("2d");
+          ctx.clearRect(0, 0, c.width, c.height);
+          var img = document.getElementById("scream");
+          ctx.drawImage(img, 0, 0, 320, 200);
+          var pngUrl = c.toDataURL();
+          $scope.updateImgBase64(pngUrl);
+        }, 500);
+
       };
       fileReader.readAsDataURL(fileToLoad);
     }

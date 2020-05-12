@@ -40,11 +40,7 @@ var CharSchema = mongoose.Schema({
     require: true,
   },
   series_id: {
-    type: Number,
-    require: true,
-  },
-  origin_series_id: {
-    type: Number,
+    type: String,
     require: true,
   },
 });
@@ -157,6 +153,13 @@ app.get("/series", function (req, res) {
   });
 });
 
+app.get("/api/char/:series_id", function (req, res) {
+  var series_id = req.params.series_id;
+  Char.find({ series_id: series_id }, function (err, collection) {
+    res.json(collection);
+  });
+});
+
 var sess;
 app.get("/api/series/create/:seriesname", function (req, res) {
   sess = req.session;
@@ -172,6 +175,69 @@ app.get("/api/series/create/:seriesname", function (req, res) {
   }, function (err, collection) {
     res.json(collection);
   });
+});
+
+app.get("/char/approve/:_id", function (req, res) {
+  sess = req.session;
+
+  //Admin
+  if (sess.priority == 0) {
+    var _id = req.params._id;
+    PreChar.findOne({
+      _id: _id
+    }, function (err, collection) {
+      var previousname = collection.previousname;
+      var name = collection.name;
+      var image = collection.image;
+      var rarity = collection.rarity;
+      var series_id = collection.series_id;
+      Char.findOne({
+        name: previousname
+      }, function (err, collection) {
+        if (collection) {
+          var filter = {
+            name: previousname
+          };
+          var update = {
+            name: name,
+            image: image,
+            rarity: rarity,
+            series_id: series_id,
+          };
+          Char.findOneAndUpdate(filter, update, {
+            upsert: true
+          }, function (
+            err,
+            doc
+          ) {
+            if (err) return res.send(500, {
+              error: err
+            });
+            return res.send("Succesfully saved.");
+          });
+        } else {
+          var char = new Char({
+            name: name,
+            image: image,
+            rarity: rarity,
+            series_id: series_id,
+          });
+          char.save(function (err, char) {
+            res.json(char);
+          });
+        }
+        PreChar.deleteOne({
+          _id: _id
+        }, function (err) {
+          if (err) return handleError(err);
+        });
+      });
+    });
+  } else {
+    res.json({
+      err: "You don't have permission!"
+    });
+  }
 });
 
 app.get("/series/approve/:_id", function (req, res) {
@@ -247,6 +313,28 @@ app.delete("/api/series/delete/:_id", function (req, res) {
       });
     });
 
+  } else {
+    res.json({
+      err: "You don't have permission!"
+    });
+  }
+});
+
+app.delete("/api/prechars/delete/:_id", function (req, res) {
+  sess = req.session;
+
+  //Admin
+  if (sess.priority == 0) {
+    var _id = req.params._id;
+
+    PreChar.deleteOne({
+      _id: _id
+    }, function (err) {
+      if (err) return handleError(err);
+      PreChar.find({}, function (err, collection) {
+        res.json(collection);
+      });
+    });
   } else {
     res.json({
       err: "You don't have permission!"
@@ -435,6 +523,8 @@ app.post("/prechar/create", function (req, res) {
   var prechar = new PreChar({
     name: req.body.name,
     image: req.body.image,
+    rarity: req.body.rarity,
+    series_id: req.body.series_id,
     username: sess.username,
   });
 

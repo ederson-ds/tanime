@@ -29,7 +29,7 @@
                 <td>Pending</td>
                 <td>
                   <a href="/series/approve/{{series._id}}" class="btn btn-success">Approve</a>
-                  <button ng-click="delete(series._id)" class="btn btn-danger">Delete</button>
+                  <button ng-click="deleteSeries(series._id)" class="btn btn-danger">Delete</button>
                 </td>
               </tr>
             </tbody>
@@ -55,7 +55,8 @@
                 <td>{{prechars.name}}</td>
                 <td>Pending</td>
                 <td>
-                  <a href="/prechars/create/{{prechars.name}}">Edit</a>
+                  <a href="/char/approve/{{prechars._id}}" class="btn btn-success">Approve</a>
+                  <button ng-click="deleteChar(prechars._id)" class="btn btn-danger">Delete</button>
                 </td>
               </tr>
             </tbody>
